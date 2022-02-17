@@ -5,27 +5,7 @@ import { loginPage } from "../pageObjects/loginPage.js";
 
 const locators = require("../fixtures/locators.json");
 const phaker = require("phaker");
-// REGISTER
 
-// describe("registering ", () => {
-//   it("visit gallery app", () => {
-//     cy.visit("");
-//   });
-
-//   it("click Register button", () => {
-//     cy.get(locators.header.registerBtn).click();
-//   });
-
-//   it("registering first time", () => {
-//     cy.get(locators.register.firstName).type("Andrija");
-//     cy.get(locators.register.lastName).type("QA");
-//     cy.get(locators.register.emailReg).type("andrija124@gmail.com");
-//     cy.get(locators.register.passwordReg).type("sifra123");
-//     cy.get(locators.register.confirmedPass).type("sifra123");
-//     cy.get(locators.register.acceptedTerms).click();
-//     cy.get(locators.register.submitBtn).click();
-//   });
-// });
 
 // LOGIN
 
