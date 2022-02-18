@@ -6,7 +6,6 @@ import { loginPage } from "../pageObjects/loginPage.js";
 const locators = require("../fixtures/locators.json");
 const phaker = require("phaker");
 
-
 // LOGIN
 
 describe("login case", () => {
@@ -55,7 +54,7 @@ describe("login case", () => {
 
   //   it("login with valid credentials", () => {
   //     cy.get(locators.login.emailInput).type(phaker.internet.email());
-  //     cy.get(locators.login.passwordInput).type(phaker.internet.password());
+  //        cy.get(locators.login.passwordInput).type(phaker.internet.password());
   //     cy.get(locators.login.submitBtn).click();
   //   });
 });

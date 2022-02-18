@@ -27,4 +27,4 @@ class LoginPage {
   }
 }
 
-export const loginPage = new LoginPage();
+export const loginPage = new LoginPage(); // exportovanje

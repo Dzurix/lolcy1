@@ -7,6 +7,13 @@ import { registerPage } from "../pageObjects/registerPage";
 const locators = require("../fixtures/locators.json");
 const phaker = require("phaker");
 
+let randomUser = {
+  userEmail: phaker.internet.email(),
+  userPassword: phaker.internet.password(),
+  userFirstName: phaker.name.firstName(),
+  userLastName: phaker.name.lastName(),
+};
+
 // REGISTER
 
 describe("registering ", () => {
@@ -27,6 +34,16 @@ describe("registering ", () => {
       "sifra 123"
     );
   });
+
+  // it.only("registering using phaker", () => {
+  //   registerPage.register(
+  //     "Andrija",
+  //     "QA",
+  //     randomUser.userEmail,
+  //     randomUser.userPassword,
+  //     randomUser.userPassword
+  //   );
+  // });
 
   //  using locators
 
@@ -118,7 +135,7 @@ describe("registering ", () => {
     );
   });
 
-  //positive registration
+  //positive registration using locators
 
   it("registering first time", () => {
     cy.get(locators.register.firstName).type("Andrija");

@@ -12,6 +12,16 @@ class Navigation {
     return cy.get("a[href='/register']");
   }
 
+  get allGalleriesBtn() {
+    return cy.get("li:nth-of-type(1) > .nav-buttons.nav-link");
+  }
+
+  get myGalleriesBtn() {
+    return cy.get("li:nth-of-type(2) > .nav-buttons.nav-link");
+  }
+  get createGalleryBtn() {
+    return cy.get('a[href="/create"]');
+  }
   // seteri
 
   clickLoginButton() {
@@ -24,6 +34,15 @@ class Navigation {
 
   clickRegisterButton() {
     this.registerBtn.click();
+  }
+  clickAllGalleriesBtn() {
+    this.allGalleriesBtn.click();
+  }
+  clickMyGalleriesBtn() {
+    this.myGalleriesBtn.click();
+  }
+  clickCreateGalleryBtn() {
+    this.createGalleryBtn.click();
   }
 }
 
