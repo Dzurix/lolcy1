@@ -32,4 +32,15 @@ class GalleryPage {
   get arrowDown() {
     return cy.get('i[class="fas fa-chevron-circle-down"]');
   }
+
+  // funkcija
+
+  createGallery(title, description, image) {
+    this.titleInput.type(title);
+    this.descriptionsInput.type(description);
+    this.imagesUrl.type(image);
+    this.submitBtn.click();
+  }
 }
+
+export const galleryPage = new GalleryPage();

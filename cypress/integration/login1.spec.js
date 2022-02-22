@@ -46,6 +46,8 @@ describe("login case", () => {
     ).as("validLogin"); //alias
     loginPage.login("andrija124@gmail.com", "sifra123");
     navigation.loginButton.should("not.exist");
+    navigation.clickLogoutButton();
+    navigation.logoutBtn.should("not.exist");
     cy.wait("@validLogin").then((request) => {
       //cy.log(JSON.stringify(request.resposen.statusCode)); // nacin kako da hvatam neke podatke iz responska preko JSON (request.resposen. i onda dopisemo sta nam treba)
       expect(request.response.statusCode).to.eql(200); // asertacija
