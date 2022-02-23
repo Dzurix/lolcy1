@@ -8,10 +8,11 @@ const locators = require("../fixtures/locators.json");
 const phaker = require("phaker");
 
 let randomUser = {
-  userEmail: phaker.internet.email(),
-  userPassword: phaker.internet.password(),
   userFirstName: phaker.name.firstName(),
   userLastName: phaker.name.lastName(),
+  userEmail: phaker.internet.email(),
+  userPassword: phaker.internet.password(),
+  userPassword: phaker.internet.password(),
 };
 
 // REGISTER
@@ -19,7 +20,14 @@ let randomUser = {
 describe("registering ", () => {
   beforeEach(() => {
     cy.visit("");
-    cy.get(locators.header.registerBtn).click();
+    navigation.clickRegisterButton();
+    cy.url().should("include", "/register");
+    cy.url().should("include", "gallery-app");
+    loginPage.loginTitle.should("be.visible");
+    loginPage.loginTitle.should("have.text", "Register");
+    loginPage.loginTitle.should("have.css", "font-size", "45px");
+    loginPage.loginTitle.should("have.css", "color", "rgb(72, 73, 75)");
+    loginPage.loginTitle.should("have.css", "font-weight", "900");
   });
 
   //negative registration
@@ -29,9 +37,9 @@ describe("registering ", () => {
     registerPage.register(
       "Andrija",
       "QA",
-      "andrija124gmail.com",
+      "andrij@a124gmail.com",
       "sifra123",
-      "sifra 123"
+      "sifra123"
     );
   });
 
@@ -75,34 +83,85 @@ describe("registering ", () => {
       "sifra123",
       "sifra123"
     );
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should(
+      "have.text",
+      "The email must be a valid email address."
+    );
+    loginPage.errorAlert.should(
+      "have.css",
+      "background-color",
+      "rgb(248, 215, 218)"
+    );
   });
 
   it("registering with one ' ' space character in pass", () => {
-    registerPage.register("Andrija", "QA", "andrija124@gmailcom", " ", " ");
+    registerPage.register("Andrija", "QA", "andrija126@gmail.com", " ", " ");
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should("have.text", "The password field is required.");
+    loginPage.errorAlert.should(
+      "have.css",
+      "border-color",
+      "rgb(245, 198, 203)"
+    );
   });
 
   it("registering with one character in pass", () => {
-    registerPage.register("Andrija", "QA", "andrija124@gmailcom", "1", "1");
+    registerPage.register("Andrija", "QA", "andrija126@gmail.com", "A1", "A1");
+    cy.get("#password").should("have.length", 3);
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should(
+      "have.text",
+      "The password must be at least 8 characters."
+    );
+    loginPage.errorAlert.should(
+      "have.css",
+      "border-color",
+      "rgb(245, 198, 203)"
+    );
   });
 
   it("registering with four character in pass", () => {
     registerPage.register(
       "Andrija",
       "QA",
-      "andrija124@gmailcom",
+      "andrija126@gmail.com",
       "1abc",
       "1abc"
     );
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should(
+      "have.text",
+      "The password must be at least 8 characters."
+    );
+    loginPage.errorAlert.should(
+      "have.css",
+      "border-color",
+      "rgb(245, 198, 203)"
+    );
+    registerPage.passwordReg.should("have.length", 1);
   });
 
   it("registering with seven character in pass", () => {
     registerPage.register(
       "Andrija",
       "QA",
-      "andrija124@gmailcom",
+      "andrija126@gmail.com",
       "1234567",
       "1234567"
     );
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should(
+      "have.text",
+      "The password must be at least 8 characters."
+    );
+    loginPage.errorAlert.should(
+      "have.css",
+      "border-color",
+      "rgb(245, 198, 203)"
+    );
+    registerPage.passwordReg.should("have.length", 6);
+    registerPage.confirmedPass.should("have.length", 6);
   });
 
   it("registering with nine character in pass", () => {
@@ -115,14 +174,16 @@ describe("registering ", () => {
     );
   });
 
-  it("registering with diferent passwords", () => {
+  it.only("registering with diferent passwords existing account", () => {
     registerPage.register(
       "Andrija",
       "QA",
-      "andrija124@gmailcom",
+      "andrija124@gmail.com",
       "1234567ab",
       "1234567ac"
     );
+    registerPage.emailTaken.should("be.visible");
+    loginPage.errorAlert.should("be.visible");
   });
 
   it("registering without clicking on 'Accept terms'", () => {
@@ -137,13 +198,13 @@ describe("registering ", () => {
 
   //positive registration using locators
 
-  it("registering first time", () => {
-    cy.get(locators.register.firstName).type("Andrija");
-    cy.get(locators.register.lastName).type("QA");
-    cy.get(locators.register.emailReg).type("andrija124@gmail.com");
-    cy.get(locators.register.passwordReg).type("sifra123");
-    cy.get(locators.register.confirmedPass).type("sifra123");
-    cy.get(locators.register.acceptedTerms).click();
-    cy.get(locators.register.submitBtn).click();
-  });
+  // it("registering first time", () => {
+  //   cy.get(locators.register.firstName).type("Andrija");
+  //   cy.get(locators.register.lastName).type("QA");
+  //   cy.get(locators.register.emailReg).type("andrija124@gmail.com");
+  //   cy.get(locators.register.passwordReg).type("sifra123");
+  //   cy.get(locators.register.confirmedPass).type("sifra123");
+  //   cy.get(locators.register.acceptedTerms).click();
+  //   cy.get(locators.register.submitBtn).click();
+  // });
 });

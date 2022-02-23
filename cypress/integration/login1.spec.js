@@ -49,7 +49,7 @@ describe("login case", () => {
     navigation.clickLogoutButton();
     navigation.logoutBtn.should("not.exist");
     cy.wait("@validLogin").then((request) => {
-      //cy.log(JSON.stringify(request.resposen.statusCode)); // nacin kako da hvatam neke podatke iz responska preko JSON (request.resposen. i onda dopisemo sta nam treba)
+      //cy.log(JSON.stringify(request.response.statusCode)); // nacin kako da hvatam neke podatke iz responska preko JSON (request.resposen. i onda dopisemo sta nam treba)
       expect(request.response.statusCode).to.eql(200); // asertacija
     });
   });

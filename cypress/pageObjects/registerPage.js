@@ -28,6 +28,10 @@ class RegisterPage {
     return cy.get(".btn");
   }
 
+  get emailTaken() {
+    return cy.get(":nth-child(3) > .alert");
+  }
+
   // funckija
 
   register(firstName, lastName, email, passwordReg, confirmedPass) {
