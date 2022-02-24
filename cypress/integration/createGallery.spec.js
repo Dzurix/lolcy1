@@ -21,14 +21,16 @@ describe("create gallery spec", () => {
     loginPage.login("dbzman25@gmail.com", "sifra123");
     navigation.clickCreateGalleryBtn();
     navigation.loginButton.should("not.exist");
+    cy.url().should("include", "/create");
   });
 
-  it("create gallery with walid random data from phaker", () => {
+  it.only(" walid data from phaker with two char as title", () => {
     galleryPage.createGallery("01", "opis", phaker.image.avatar());
-  });
-
-  it("create gallery with one number as a title", () => {
-    galleryPage.createGallery("1", "opis", phaker.image.avatar());
+    cy.url().should("include", "/");
+    galleryPage.pageTitle.should("have.text", "All Galleries");
+    galleryPage.authorName.should("include.text", "Dbz Man"); // EUREKAAAAAAAAAAAAAAAAAAAAA
+    galleryPage.galleryName.should("include.text", "01");
+    navigation.logoutBtn.should("exist");
   });
 
   it("create gallery with one char as a title", () => {

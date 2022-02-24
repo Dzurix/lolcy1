@@ -37,10 +37,15 @@ describe("registering ", () => {
     registerPage.register(
       "Andrija",
       "QA",
-      "andrij@a124gmail.com",
+      "andrija124gmail.com",
       "sifra123",
       "sifra123"
     );
+    navigation.loginButton.should("exist");
+    navigation.registerBtn.should("exist");
+    navigation.logoutBtn.should("not.exist");
+    cy.url().should("include", "/register");
+    cy.url().should("include", "gallery-app");
   });
 
   // it.only("registering using phaker", () => {
@@ -73,6 +78,11 @@ describe("registering ", () => {
       "sifra123",
       "sifra123"
     );
+    navigation.loginButton.should("exist");
+    navigation.registerBtn.should("exist");
+    navigation.logoutBtn.should("not.exist");
+    cy.url().should("include", "/register");
+    cy.url().should("include", "gallery-app");
   });
 
   it("registering without '.' in email", () => {
@@ -108,7 +118,6 @@ describe("registering ", () => {
 
   it("registering with one character in pass", () => {
     registerPage.register("Andrija", "QA", "andrija126@gmail.com", "A1", "A1");
-    cy.get("#password").should("have.length", 3);
     loginPage.errorAlert.should("be.visible");
     loginPage.errorAlert.should(
       "have.text",
@@ -139,7 +148,6 @@ describe("registering ", () => {
       "border-color",
       "rgb(245, 198, 203)"
     );
-    registerPage.passwordReg.should("have.length", 1);
   });
 
   it("registering with seven character in pass", () => {
@@ -160,21 +168,29 @@ describe("registering ", () => {
       "border-color",
       "rgb(245, 198, 203)"
     );
-    registerPage.passwordReg.should("have.length", 6);
-    registerPage.confirmedPass.should("have.length", 6);
   });
 
-  it("registering with nine character in pass", () => {
+  it("registering with exising account", () => {
     registerPage.register(
       "Andrija",
       "QA",
-      "andrija124@gmailcom",
-      "1234567ab",
-      "1234567ab"
+      "andrija124@gmail.com",
+      "sifra123",
+      "sifra123"
+    );
+    navigation.loginButton.should("exist");
+    navigation.registerBtn.should("exist");
+    navigation.logoutBtn.should("not.exist");
+    cy.url().should("include", "/register");
+    cy.url().should("include", "gallery-app");
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should(
+      "have.text",
+      "The email has already been taken."
     );
   });
 
-  it.only("registering with diferent passwords existing account", () => {
+  it("registering with diferent password existing account", () => {
     registerPage.register(
       "Andrija",
       "QA",
@@ -186,13 +202,33 @@ describe("registering ", () => {
     loginPage.errorAlert.should("be.visible");
   });
 
+  it("registering with diferent passwords", () => {
+    registerPage.register(
+      "Andrija",
+      "QA",
+      "andrija126@gmail.com",
+      "12367abcd",
+      "1234567ac"
+    );
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should(
+      "have.text",
+      "The password confirmation does not match."
+    );
+  });
+
   it("registering without clicking on 'Accept terms'", () => {
     registerPage.registerWithoutTerms(
       "Andrija",
       "QA",
-      "andrija124@gmailcom",
+      "andrija126@gmail.com",
       "1234567ab",
-      "1234567ac"
+      "1234567ab"
+    );
+    loginPage.errorAlert.should("be.visible");
+    loginPage.errorAlert.should(
+      "have.text",
+      "The terms and conditions must be accepted."
     );
   });
 

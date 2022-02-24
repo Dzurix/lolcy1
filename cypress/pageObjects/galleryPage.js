@@ -33,6 +33,16 @@ class GalleryPage {
     return cy.get('i[class="fas fa-chevron-circle-down"]');
   }
 
+  get pageTitle() {
+    return cy.get('h1[class="title-style"]');
+  }
+  get authorName() {
+    return cy.get("div:nth-of-type(1) > p > .box-title");
+  }
+  get galleryName() {
+    return cy.get("div:nth-of-type(1) > h2 > .box-title");
+  }
+
   // funkcija
 
   createGallery(title, description, image) {
