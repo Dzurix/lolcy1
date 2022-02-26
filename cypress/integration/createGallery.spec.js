@@ -13,7 +13,6 @@ const phaker = require("phaker");
 
 describe("create gallery spec", () => {
   beforeEach(() => {
-    cy.request;
     cy.visit("");
     cy.url().should("include", "gallery-app");
     navigation.clickLoginButton();

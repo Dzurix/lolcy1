@@ -39,8 +39,20 @@ class GalleryPage {
   get authorName() {
     return cy.get("div:nth-of-type(1) > p > .box-title");
   }
+
+  get authorID() {
+    return cy.get('href="/authors/2273"');
+  }
   get galleryName() {
-    return cy.get("div:nth-of-type(1) > h2 > .box-title");
+    return cy.get("h2 > .box-title");
+  }
+
+  get cellGallery() {
+    return cy.get(".grid > .cell");
+  }
+
+  get deleteBtn() {
+    return cy.get("#app div:nth-child(5) button");
   }
 
   // funkcija
@@ -50,6 +62,16 @@ class GalleryPage {
     this.descriptionsInput.type(description);
     this.imagesUrl.type(image);
     this.submitBtn.click();
+  }
+
+  deleteGallery(author) {
+    this.authorName.delete(author);
+  }
+
+  //seteri
+
+  clickDeleteBtn() {
+    this.deleteBtn.click();
   }
 }
 
