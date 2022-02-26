@@ -19,7 +19,16 @@ describe("delete gallery", () => {
 
   //logovanje preko backenda
   it.only(" valid login through backend", () => {
+    cy.intercept(
+      "DELETE",
+      "https://gallery-api.vivifyideas.com/api/galleries/",
+      (req) => {}
+    ).as("deleteGallery");
     cy.visit("");
     navigation.loginButton.should("not.exist");
+    navigation.clickMyGalleriesBtn();
+    cy.wait("@deleteGallery").then((request) => {
+      expect(request.response.statusCode).to.eql(200);
+    });
   });
 });
