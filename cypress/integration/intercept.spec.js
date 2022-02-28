@@ -9,6 +9,8 @@ import { registerPage } from "../pageObjects/registerPage";
 const phaker = require("phaker");
 
 let galleryId;
+let savedToken;
+let userId;
 
 describe("vezbanje intercepta", () => {
   beforeEach(() => {
@@ -20,18 +22,22 @@ describe("vezbanje intercepta", () => {
     cy.loginTroughBackend("validLoginEmail", "validLoginPassword");
   });
 
-  //   it("Intercept request", () => {             //interceptovanje
-  //     cy.intercept(
-  //       "POST",
-  //       "https://gallery-api.vivifyideas.com/api/auth/login"
-  //     ).as("sucessfullLogin");
-  //     cy.visit("");
-  //     navigation.clickLoginButton();
-  //     loginPage.login("dbzman25@gmail.com", "sifra123");
-  //     cy.wait("@sucessfullLogin").then((interception) => {
-  //       console.log("evo ga interception", interception);
-  //     });
-  //   });
+  it("Intercept request", () => {
+    //interceptovanje
+    cy.intercept(
+      "POST",
+      "https://gallery-api.vivifyideas.com/api/auth/login"
+    ).as("sucessfullLogin");
+    cy.visit("");
+    navigation.clickLoginButton();
+    loginPage.login("dbzman25@gmail.com", "sifra123");
+    cy.wait("@sucessfullLogin").then((interception) => {
+      console.log("evo ga interception", interception);
+
+      savedToken = interception.response.body.access_token; //cuvamo token u gore definisanu promenljivu
+      userId = interception.response.body.user_id; //cuvamo usera u goredefinisanu promenljivu
+    });
+  });
 
   it("Izvlacenje vrednosti prilikom kreiranja galerije", () => {
     cy.intercept(
@@ -46,14 +52,16 @@ describe("vezbanje intercepta", () => {
       phaker.image.avatar()
     );
     cy.wait("@createGallery").then((interception) => {
-      // console.log("EVO GA interception", interception); // nacin kako da dobijem response i gde da nadjem ID galerije
+      console.log("EVO GA interception", interception); // nacin kako da dobijem response i gde da nadjem ID galerije
 
-      galleryId = interception.response.body.id;
+      galleryId = interception.response.body.id; //cuvamo galleryID u gore definisanu promenljivu
       cy.log(galleryId);
     });
 
     it("Posetiti novokreiranu galeriju", () => {
-      cy.visit("/galleries/${galleryId}");
+      window.localStorage.setItem("token", savedToken); //setujemo token u localstorage
+      window.localStorage.setItem("user_id", userId); //setujemo userId u lokalstorage
+      cy.visit(`galleries/${galleryId}`); // posecujemo direkno preko url novokreiranu glaeriju
     });
 
     it("Obrisati novokreiranu galeriju", () => {
