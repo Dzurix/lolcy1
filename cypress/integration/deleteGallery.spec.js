@@ -8,26 +8,36 @@ import { registerPage } from "../pageObjects/registerPage";
 
 const phaker = require("phaker");
 
+let galleryId = 5022;
+let savedToken;
+let userId;
+
 describe("delete gallery", () => {
-  beforeEach(() => {
-    cy.visit("");
-    cy.url().should("include", "gallery-app");
+  before(() => {
+    //interceptovanje
+    cy.intercept(
+      "POST",
+      "https://gallery-api.vivifyideas.com/api/auth/login"
+    ).as("sucessfullLogin");
+    cy.visit("/");
     navigation.clickLoginButton();
-    cy.url().should("include", "/login");
-    cy.loginTroughBackend("validLoginEmail", "validLoginPassword"); //logovanje preko backenda
+    loginPage.login("dbzman25@gmail.com", "sifra123");
+    cy.wait("@sucessfullLogin").then((interception) => {
+      console.log("evo ga interception logina", interception);
+
+      savedToken = interception.response.body.access_token; //cuvamo token u gore definisanu promenljivu
+      userId = interception.response.body.user_id; //cuvamo usera u gore definisanu promenljivu
+    });
   });
 
-  it.only(" valid login through backend", () => {
-    cy.intercept(
-      "DELETE",
-      "https://gallery-api.vivifyideas.com/api/galleries/",
-      (req) => {}
-    ).as("deleteGallery");
-    cy.visit("");
-    navigation.loginButton.should("not.exist");
-    navigation.clickMyGalleriesBtn();
-    cy.wait("@deleteGallery").then((request) => {
-      expect(request.response.statusCode).to.eql(200);
-    });
+  it("Get gallery through backend", () => {
+    cy.request({
+      method: "GET",
+      url: "https://gallery-api.vivifyideas.com/api/galleries/" + galleryId,
+    })
+      .its("body")
+      .then((responseBody) => {
+        expect(responseBody.id).to.equal(galleryId);
+      });
   });
 });
