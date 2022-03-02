@@ -14,10 +14,9 @@ describe("delete gallery", () => {
     cy.url().should("include", "gallery-app");
     navigation.clickLoginButton();
     cy.url().should("include", "/login");
-    cy.loginTroughBackend("validLoginEmail", "validLoginPassword");
+    cy.loginTroughBackend("validLoginEmail", "validLoginPassword"); //logovanje preko backenda
   });
 
-  //logovanje preko backenda
   it.only(" valid login through backend", () => {
     cy.intercept(
       "DELETE",

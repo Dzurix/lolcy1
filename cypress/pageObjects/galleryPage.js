@@ -54,7 +54,9 @@ class GalleryPage {
   get deleteBtn() {
     return cy.get("#app div:nth-child(5) button");
   }
-
+  get allGaleriesTitle() {
+    return cy.get(".title-style");
+  }
   // funkcija
 
   createGallery(title, description, image) {

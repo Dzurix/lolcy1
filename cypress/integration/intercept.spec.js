@@ -13,64 +13,52 @@ let savedToken;
 let userId;
 
 describe("vezbanje intercepta", () => {
-  beforeEach(() => {
-    cy.visit("");
-
-    cy.url().should("include", "gallery-app");
-    navigation.clickLoginButton();
-    cy.url().should("include", "/login");
-    cy.loginTroughBackend("validLoginEmail", "validLoginPassword");
-  });
-
-  it("Intercept request", () => {
+  before(() => {
     //interceptovanje
     cy.intercept(
       "POST",
       "https://gallery-api.vivifyideas.com/api/auth/login"
     ).as("sucessfullLogin");
-    cy.visit("");
+    cy.visit("/");
     navigation.clickLoginButton();
     loginPage.login("dbzman25@gmail.com", "sifra123");
     cy.wait("@sucessfullLogin").then((interception) => {
-      console.log("evo ga interception", interception);
+      console.log("evo ga interception logina", interception);
 
       savedToken = interception.response.body.access_token; //cuvamo token u gore definisanu promenljivu
-      userId = interception.response.body.user_id; //cuvamo usera u goredefinisanu promenljivu
+      userId = interception.response.body.user_id; //cuvamo usera u gore definisanu promenljivu
     });
   });
-
   it("Izvlacenje vrednosti prilikom kreiranja galerije", () => {
     cy.intercept(
       "POST",
       "https://gallery-api.vivifyideas.com/api/galleries"
-    ).as("createGallery");
-    cy.visit("");
+    ).as("createdGallery");
     navigation.clickCreateGalleryBtn();
     galleryPage.createGallery(
       phaker.name.firstName(),
       phaker.lorem.words(),
       phaker.image.avatar()
     );
-    cy.wait("@createGallery").then((interception) => {
-      console.log("EVO GA interception", interception); // nacin kako da dobijem response i gde da nadjem ID galerije
+    cy.wait("@createdGallery").then((interception) => {
+      console.log("EVO GA interception galerije", interception); // nacin kako da dobijem response i gde da nadjem ID galerije
 
       galleryId = interception.response.body.id; //cuvamo galleryID u gore definisanu promenljivu
       cy.log(galleryId);
     });
+  });
+  it("Posetiti novokreiranu galeriju", () => {
+    window.localStorage.setItem("token", savedToken); //setujemo token u localstorage
+    window.localStorage.setItem("user_id", userId); //setujemo userId u lokalstorage
+    cy.visit(`galleries/${galleryId}`); // posecujemo direkno preko url novokreiranu glaeriju
+    console.log("EVO posecivanje galerije");
+  });
 
-    it("Posetiti novokreiranu galeriju", () => {
-      window.localStorage.setItem("token", savedToken); //setujemo token u localstorage
-      window.localStorage.setItem("user_id", userId); //setujemo userId u lokalstorage
-      cy.visit(`galleries/${galleryId}`); // posecujemo direkno preko url novokreiranu glaeriju
-    });
-
-    it("Obrisati novokreiranu galeriju", () => {
-      cy.intercept(
-        "DELETE",
-        "https://gallery-api.vivifyideas.com/api/galleries"
-      ).as("DeleteGallery");
-
-      DeleteGallery(galleryId);
-    });
+  it("Obrisati novokreiranu galeriju", () => {
+    galleryPage.deleteBtn.should("be.visible").click(); //cekamo da bude vidljiv delete button i klikcemo na njega
+    console.log("EVO brisanje galerije");
+    galleryPage.allGaleriesTitle
+      .should("be.visible")
+      .and("contain", "All Galleries"); //proveravamo da li smo na home page
   });
 });
