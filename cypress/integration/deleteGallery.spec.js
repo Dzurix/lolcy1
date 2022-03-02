@@ -8,7 +8,7 @@ import { registerPage } from "../pageObjects/registerPage";
 
 const phaker = require("phaker");
 
-let galleryId = 5022;
+let galleryId;
 let savedToken;
 let userId;
 
@@ -31,13 +31,31 @@ describe("delete gallery", () => {
   });
 
   it("Get gallery through backend", () => {
-    cy.request({
-      method: "GET",
-      url: "https://gallery-api.vivifyideas.com/api/galleries/" + galleryId,
-    })
-      .its("body")
-      .then((responseBody) => {
-        expect(responseBody.id).to.equal(galleryId);
-      });
+    cy.intercept(
+      "GET",
+      "https://gallery-api.vivifyideas.com/api/my-galleries/"
+    ).as("fethcingGalleryId");
+    navigation.clickMyGalleriesBtn();
+    cy.wait(4000);
+    galleryPage.clickGalleryName();
+    cy.wait("@fethcingGalleryId").then((interception) => {
+      console.log("EVO ga intercept gallery ID", interception);
+
+      galleryId = interception.response.body.id;
+    });
+    it("Posetiti novokreiranu galeriju", () => {
+      window.localStorage.setItem("token", savedToken); //setujemo token u localstorage
+      window.localStorage.setItem("user_id", userId); //setujemo userId u lokalstorage
+      cy.visit(`galleries/${galleryId}`); // posecujemo direkno preko url novokreiranu glaeriju
+      console.log("EVO posecivanje galerije");
+    });
+
+    it("Obrisati novokreiranu galeriju", () => {
+      galleryPage.deleteBtn.should("be.visible").click(); //cekamo da bude vidljiv delete button i klikcemo na njega
+      console.log("EVO brisanje galerije");
+      galleryPage.allGaleriesTitle
+        .should("be.visible")
+        .and("contain", "All Galleries"); //proveravamo da li smo na home page
+    });
   });
 });

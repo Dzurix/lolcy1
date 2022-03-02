@@ -44,7 +44,7 @@ class GalleryPage {
     return cy.get('href="/authors/2273"');
   }
   get galleryName() {
-    return cy.get("h2 > .box-title");
+    return cy.get("div:nth-of-type(1) > h2 > .box-title"); // ovo je samo privremeno, posto imam 10 galerija a ovo je jedini nacin da uhvatim prvu galeriju
   }
 
   get cellGallery() {
@@ -74,6 +74,10 @@ class GalleryPage {
 
   clickDeleteBtn() {
     this.deleteBtn.click();
+  }
+
+  clickGalleryName() {
+    this.galleryName.click();
   }
 }
 
