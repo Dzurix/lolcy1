@@ -17,7 +17,7 @@ describe("create gallery spec", () => {
     cy.url().should("include", "gallery-app");
     navigation.clickLoginButton();
     cy.url().should("include", "/login");
-    loginPage.login("dbzman25@gmail.com", "sifra123");
+    cy.loginTroughBackend("dbzman25@gmail.com", "sifra123");
     navigation.clickCreateGalleryBtn();
     navigation.loginButton.should("not.exist");
     cy.url().should("include", "/create");

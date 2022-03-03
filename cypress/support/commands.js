@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("loginTroughBackend", (userName, password) => {
+Cypress.Commands.add("loginTroughBackend", () => {
   cy.request({
     method: "POST",
     url: "https://gallery-api.vivifyideas.com/api/auth/login",
