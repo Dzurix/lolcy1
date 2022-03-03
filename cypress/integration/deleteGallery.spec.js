@@ -41,7 +41,7 @@ describe("delete gallery", () => {
     cy.wait("@fethcingGalleryId").then((interception) => {
       console.log("EVO ga intercept gallery ID", interception);
 
-      galleryId = interception.response.body.id;
+      galleryId = interception.response.body.gallery_id; // nisam siguran da li ide samo id ili gallery_id
     });
     it("Posetiti novokreiranu galeriju", () => {
       window.localStorage.setItem("token", savedToken); //setujemo token u localstorage
